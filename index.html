@@ -1,42 +1,93 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sim Companies Building Data</title>
+<title>Sim Companies Tracker</title>
+
 <style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-    margin: 0;
-    padding: 20px;
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    background:#f4f6f8;
+    color:#222;
 }
-h1 {
-    text-align: center;
+header{
+    background:#1f2937;
+    color:white;
+    padding:20px;
+    text-align:center;
 }
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:15px;
 }
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
-th {
-    background: #222;
-    color: white;
+input,select{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px;
+    margin-top:6px;
+    border:1px solid #ccc;
+    border-radius:6px;
 }
-tr:nth-child(even) {
-    background: #f2f2f2;
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th,td{
+    padding:9px;
+    border-bottom:1px solid #ddd;
+    text-align:left;
+}
+th{
+    background:#e5e7eb;
+}
+canvas{
+    width:100%;
+    max-height:400px;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Sim Companies Building Data</h1>
+<header>
+<h1>Sim Companies Building Tracker</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+<h2>Today's Data</h2>
+
+<label>Date</label>
+<input type="date" id="date">
+
+<button onclick="saveData()">Save Today's Data</button>
+
+<p id="message"></p>
+</div>
+
+<div class="card">
+<h2>Buildings</h2>
 
 <table>
 <thead>
@@ -44,69 +95,250 @@ tr:nth-child(even) {
 <th>#</th>
 <th>Building</th>
 <th>Quantity</th>
-<th>Proportion</th>
 </tr>
 </thead>
 
-<tbody>
-
-<tr><td>1</td><td>Power plant</td><td>35,387</td><td>12.27%</td></tr>
-<tr><td>2</td><td>Farm</td><td>28,757</td><td>9.97%</td></tr>
-<tr><td>3</td><td>Electronics factory</td><td>16,813</td><td>5.83%</td></tr>
-<tr><td>4</td><td>Mine</td><td>16,583</td><td>5.75%</td></tr>
-<tr><td>5</td><td>Grocery store</td><td>16,571</td><td>5.75%</td></tr>
-<tr><td>6</td><td>Oil rig</td><td>15,710</td><td>5.45%</td></tr>
-<tr><td>7</td><td>Factory</td><td>14,505</td><td>5.03%</td></tr>
-<tr><td>8</td><td>Water reservoir</td><td>14,206</td><td>4.93%</td></tr>
-<tr><td>9</td><td>Refinery</td><td>10,441</td><td>3.62%</td></tr>
-<tr><td>10</td><td>Fashion store</td><td>8,717</td><td>3.02%</td></tr>
-<tr><td>11</td><td>Electronics store</td><td>8,076</td><td>2.80%</td></tr>
-<tr><td>12</td><td>Food processing plant</td><td>7,284</td><td>2.53%</td></tr>
-<tr><td>13</td><td>Academy</td><td>6,078</td><td>2.11%</td></tr>
-<tr><td>14</td><td>Ranch</td><td>5,818</td><td>2.02%</td></tr>
-<tr><td>15</td><td>Beverage factory</td><td>5,421</td><td>1.88%</td></tr>
-<tr><td>16</td><td>Hardware store</td><td>5,131</td><td>1.78%</td></tr>
-<tr><td>17</td><td>Quarry</td><td>4,763</td><td>1.65%</td></tr>
-<tr><td>18</td><td>Construction factory</td><td>4,396</td><td>1.52%</td></tr>
-<tr><td>19</td><td>Mill</td><td>4,271</td><td>1.48%</td></tr>
-<tr><td>20</td><td>Gas station</td><td>4,150</td><td>1.44%</td></tr>
-<tr><td>21</td><td>Fashion factory</td><td>3,510</td><td>1.22%</td></tr>
-<tr><td>22</td><td>Propulsion factory</td><td>3,329</td><td>1.15%</td></tr>
-<tr><td>23</td><td>Sales offices</td><td>3,198</td><td>1.11%</td></tr>
-<tr><td>24</td><td>Concrete plant</td><td>3,179</td><td>1.10%</td></tr>
-<tr><td>25</td><td>Physics laboratory</td><td>3,157</td><td>1.09%</td></tr>
-<tr><td>26</td><td>General contractor</td><td>3,141</td><td>1.09%</td></tr>
-<tr><td>27</td><td>Shipping depot</td><td>3,030</td><td>1.05%</td></tr>
-<tr><td>28</td><td>Car dealership</td><td>3,019</td><td>1.05%</td></tr>
-<tr><td>29</td><td>Catering</td><td>2,747</td><td>0.95%</td></tr>
-<tr><td>30</td><td>Slaughterhouse</td><td>2,178</td><td>0.76%</td></tr>
-<tr><td>31</td><td>Restaurant</td><td>1,972</td><td>0.68%</td></tr>
-<tr><td>32</td><td>Aerospace factory</td><td>1,849</td><td>0.64%</td></tr>
-<tr><td>33</td><td>Forest nursery</td><td>1,711</td><td>0.59%</td></tr>
-<tr><td>34</td><td>Lake</td><td>1,681</td><td>0.58%</td></tr>
-<tr><td>35</td><td>Halloween market</td><td>1,639</td><td>0.57%</td></tr>
-<tr><td>36</td><td>Car factory</td><td>1,582</td><td>0.55%</td></tr>
-<tr><td>37</td><td>Bank</td><td>1,551</td><td>0.54%</td></tr>
-<tr><td>38</td><td>Bakery</td><td>1,504</td><td>0.52%</td></tr>
-<tr><td>39</td><td>Aerospace electronics</td><td>1,471</td><td>0.51%</td></tr>
-<tr><td>40</td><td>Temple</td><td>1,413</td><td>0.49%</td></tr>
-<tr><td>41</td><td>Kitchen</td><td>1,379</td><td>0.48%</td></tr>
-<tr><td>42</td><td>Park</td><td>1,354</td><td>0.47%</td></tr>
-<tr><td>43</td><td>Chemistry laboratory</td><td>1,161</td><td>0.40%</td></tr>
-<tr><td>44</td><td>Plant research center</td><td>1,146</td><td>0.40%</td></tr>
-<tr><td>45</td><td>Hangar</td><td>968</td><td>0.34%</td></tr>
-<tr><td>46</td><td>Software R&amp;D</td><td>520</td><td>0.18%</td></tr>
-<tr><td>47</td><td>Vertical integration facility</td><td>464</td><td>0.16%</td></tr>
-<tr><td>48</td><td>Breeding laboratory</td><td>364</td><td>0.13%</td></tr>
-<tr><td>49</td><td>Fashion &amp; Design</td><td>336</td><td>0.12%</td></tr>
-<tr><td>50</td><td>Automotive R&amp;D</td><td>251</td><td>0.09%</td></tr>
-<tr><td>51</td><td>Xmas market</td><td>227</td><td>0.08%</td></tr>
-<tr><td>52</td><td>Beach market</td><td>96</td><td>0.03%</td></tr>
-<tr><td>53</td><td>Launch pad</td><td>86</td><td>0.03%</td></tr>
-<tr><td>54</td><td>Spring market</td><td>48</td><td>0.02%</td></tr>
-
-</tbody>
+<tbody id="buildingTable"></tbody>
 </table>
+</div>
+
+<div class="card">
+<h2>History Chart</h2>
+
+<label>Select Building</label>
+<select id="buildingSelect" onchange="drawChart()"></select>
+
+<canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+<h2>Saved History</h2>
+<div id="history"></div>
+</div>
+
+</div>
+
+<script>
+
+const buildings = [
+["Power plant",35331],
+["Farm",28744],
+["Electronics factory",16767],
+["Mine",16594],
+["Grocery store",16578],
+["Oil rig",15687],
+["Factory",14497],
+["Water reservoir",14194],
+["Refinery",10452],
+["Fashion store",8713],
+["Electronics store",8057],
+["Food processing plant",7278],
+["Academy",6056],
+["Ranch",5822],
+["Beverage factory",5424],
+["Hardware store",5125],
+["Quarry",4727],
+["Construction factory",4397],
+["Mill",4279],
+["Gas station",4135],
+["Fashion factory",3510],
+["Propulsion factory",3313],
+["Sales offices",3188],
+["Concrete plant",3185],
+["Physics laboratory",3155],
+["General contractor",3137],
+["Shipping depot",3027],
+["Car dealership",3021],
+["Catering",2733],
+["Slaughterhouse",2178],
+["Restaurant",1955],
+["Aerospace factory",1852],
+["Forest nursery",1700],
+["Lake",1678],
+["Halloween market",1641],
+["Car factory",1591],
+["Bank",1550],
+["Bakery",1500],
+["Aerospace electronics",1466],
+["Temple",1414],
+["Kitchen",1373],
+["Park",1352],
+["Chemistry laboratory",1159],
+["Plant research center",1142],
+["Hangar",966],
+["Software R&D",522],
+["Vertical integration facility",463],
+["Breeding laboratory",365],
+["Fashion & Design",334]
+];
+
+const table=document.getElementById("buildingTable");
+const select=document.getElementById("buildingSelect");
+
+buildings.forEach((b,i)=>{
+
+    const row=document.createElement("tr");
+
+    row.innerHTML=`
+        <td>${i+1}</td>
+        <td>${b[0]}</td>
+        <td>
+            <input type="number" min="0" value="${b[1]}">
+        </td>
+    `;
+
+    table.appendChild(row);
+
+    const option=document.createElement("option");
+    option.value=i;
+    option.textContent=b[0];
+
+    select.appendChild(option);
+});
+
+document.getElementById("date").value=
+new Date().toISOString().split("T")[0];
+
+function saveData(){
+
+    const date=document.getElementById("date").value;
+
+    if(!date){
+        alert("Please select a date.");
+        return;
+    }
+
+    const data=[];
+
+    document.querySelectorAll("#buildingTable tr").forEach(row=>{
+
+        data.push({
+            building:row.children[1].innerText,
+            quantity:Number(row.querySelector("input").value)||0
+        });
+
+    });
+
+    let history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    history[date]=data;
+
+    localStorage.setItem(
+        "simCompaniesHistory",
+        JSON.stringify(history)
+    );
+
+    document.getElementById("message").innerText=
+    "Data saved successfully for "+date+"!";
+
+    showHistory();
+    drawChart();
+}
+
+function showHistory(){
+
+    const history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    const box=document.getElementById("history");
+
+    const dates=Object.keys(history).sort().reverse();
+
+    if(dates.length===0){
+        box.innerText="No saved data yet.";
+        return;
+    }
+
+    box.innerHTML=dates.map(date=>
+        `<p><b>${date}</b> — ${history[date].length} buildings saved</p>`
+    ).join("");
+}
+
+function drawChart(){
+
+    const canvas=document.getElementById("chart");
+    const ctx=canvas.getContext("2d");
+
+    const history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    const dates=Object.keys(history).sort();
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(dates.length===0){
+        ctx.font="16px Arial";
+        ctx.fillText("Save data for at least one date.",20,40);
+        return;
+    }
+
+    const index=Number(select.value);
+
+    const values=dates.map(date=>{
+        return history[date][index]
+        ? history[date][index].quantity
+        : 0;
+    });
+
+    const width=canvas.width=canvas.clientWidth*2;
+    const height=canvas.height=350;
+
+    ctx.scale(2,2);
+
+    const w=canvas.clientWidth;
+    const h=175;
+
+    const max=Math.max(...values);
+    const min=Math.min(...values);
+
+    ctx.beginPath();
+
+    values.forEach((value,i)=>{
+
+        const x=30+
+        (i/(Math.max(values.length-1,1)))*(w-50);
+
+        const y=20+
+        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
+
+        if(i===0){
+            ctx.moveTo(x,y);
+        }else{
+            ctx.lineTo(x,y);
+        }
+    });
+
+    ctx.stroke();
+
+    ctx.font="12px Arial";
+
+    values.forEach((value,i)=>{
+
+        const x=30+
+        (i/(Math.max(values.length-1,1)))*(w-50);
+
+        const y=20+
+        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
+
+        ctx.fillText(
+            value.toLocaleString(),
+            Math.max(5,x-15),
+            Math.max(12,y-8)
+        );
+
+        ctx.fillText(
+            dates[i],
+            Math.max(5,x-25),
+            h-5
+        );
+    });
+}
+
+showHistory();
+drawChart();
+
+</script>
 
 </body>
 </html>
