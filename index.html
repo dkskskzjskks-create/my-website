@@ -30,10 +30,11 @@ header{
     border-radius:12px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
 }
-input{
+input,select{
     width:100%;
     box-sizing:border-box;
-    padding:9px;
+    padding:10px;
+    margin-top:6px;
     border:1px solid #ccc;
     border-radius:6px;
 }
@@ -54,12 +55,14 @@ table{
 th,td{
     padding:9px;
     border-bottom:1px solid #ddd;
+    text-align:left;
 }
 th{
     background:#e5e7eb;
 }
-h2{
-    margin-top:0;
+canvas{
+    width:100%;
+    max-height:400px;
 }
 </style>
 </head>
@@ -97,6 +100,15 @@ h2{
 
 <tbody id="buildingTable"></tbody>
 </table>
+</div>
+
+<div class="card">
+<h2>History Chart</h2>
+
+<label>Select Building</label>
+<select id="buildingSelect" onchange="drawChart()"></select>
+
+<canvas id="chart"></canvas>
 </div>
 
 <div class="card">
@@ -161,8 +173,10 @@ const buildings = [
 ];
 
 const table=document.getElementById("buildingTable");
+const select=document.getElementById("buildingSelect");
 
 buildings.forEach((b,i)=>{
+
     const row=document.createElement("tr");
 
     row.innerHTML=`
@@ -174,6 +188,12 @@ buildings.forEach((b,i)=>{
     `;
 
     table.appendChild(row);
+
+    const option=document.createElement("option");
+    option.value=i;
+    option.textContent=b[0];
+
+    select.appendChild(option);
 });
 
 document.getElementById("date").value=
@@ -213,6 +233,7 @@ function saveData(){
     "Data saved successfully for "+date+"!";
 
     showHistory();
+    drawChart();
 }
 
 function showHistory(){
@@ -234,7 +255,88 @@ function showHistory(){
     ).join("");
 }
 
+function drawChart(){
+
+    const canvas=document.getElementById("chart");
+    const ctx=canvas.getContext("2d");
+
+    const history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    const dates=Object.keys(history).sort();
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(dates.length===0){
+        ctx.font="16px Arial";
+        ctx.fillText("Save data for at least one date.",20,40);
+        return;
+    }
+
+    const index=Number(select.value);
+
+    const values=dates.map(date=>{
+        return history[date][index]
+        ? history[date][index].quantity
+        : 0;
+    });
+
+    const width=canvas.width=canvas.clientWidth*2;
+    const height=canvas.height=350;
+
+    ctx.scale(2,2);
+
+    const w=canvas.clientWidth;
+    const h=175;
+
+    const max=Math.max(...values);
+    const min=Math.min(...values);
+
+    ctx.beginPath();
+
+    values.forEach((value,i)=>{
+
+        const x=30+
+        (i/(Math.max(values.length-1,1)))*(w-50);
+
+        const y=20+
+        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
+
+        if(i===0){
+            ctx.moveTo(x,y);
+        }else{
+            ctx.lineTo(x,y);
+        }
+    });
+
+    ctx.stroke();
+
+    ctx.font="12px Arial";
+
+    values.forEach((value,i)=>{
+
+        const x=30+
+        (i/(Math.max(values.length-1,1)))*(w-50);
+
+        const y=20+
+        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
+
+        ctx.fillText(
+            value.toLocaleString(),
+            Math.max(5,x-15),
+            Math.max(12,y-8)
+        );
+
+        ctx.fillText(
+            dates[i],
+            Math.max(5,x-25),
+            h-5
+        );
+    });
+}
+
 showHistory();
+drawChart();
 
 </script>
 
