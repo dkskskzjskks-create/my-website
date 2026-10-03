@@ -1,12 +1,235 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim Companies Building Tracker</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .container {
+            padding: 15px;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #e5e7eb;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:active {
+            background: #1d4ed8;
+        }
+
+        .total {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>Welcome to My Website</h1>
-    <p>Ye meri first website hai.</p>
+<header>
+    <h1>Sim Companies Building Tracker</h1>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <div class="total">
+            Total Buildings: <span id="totalBuildings">0</span>
+        </div>
+        <button onclick="saveData()">Save Today's Data</button>
+    </div>
+
+    <div class="card">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Building</th>
+                    <th>Quantity</th>
+                </tr>
+            </thead>
+
+            <tbody id="buildingTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+const buildings = [
+["Power plant",35331],
+["Farm",28744],
+["Electronics factory",16767],
+["Mine",16594],
+["Grocery store",16578],
+["Oil rig",15687],
+["Factory",14497],
+["Water reservoir",14194],
+["Refinery",10452],
+["Fashion store",8713],
+["Electronics store",8057],
+["Food processing plant",7278],
+["Academy",6056],
+["Ranch",5822],
+["Beverage factory",5424],
+["Hardware store",5125],
+["Quarry",4727],
+["Construction factory",4397],
+["Mill",4279],
+["Gas station",4135],
+["Fashion factory",3510],
+["Propulsion factory",3313],
+["Sales offices",3188],
+["Concrete plant",3185],
+["Physics laboratory",3155],
+["General contractor",3137],
+["Shipping depot",3027],
+["Car dealership",3021],
+["Catering",2733],
+["Slaughterhouse",2178],
+["Restaurant",1955],
+["Aerospace factory",1852],
+["Forest nursery",1700],
+["Lake",1678],
+["Halloween market",1641],
+["Car factory",1591],
+["Bank",1550],
+["Bakery",1500],
+["Aerospace electronics",1466],
+["Temple",1414],
+["Kitchen",1373],
+["Park",1352],
+["Chemistry laboratory",1159],
+["Plant research center",1142],
+["Hangar",966],
+["Software R&D",522],
+["Vertical integration facility",463],
+["Breeding laboratory",365],
+["Fashion & Design",334]
+];
+
+const table = document.getElementById("buildingTable");
+
+buildings.forEach((building, index) => {
+
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${building[0]}</td>
+        <td>
+            <input
+                type="number"
+                value="${building[1]}"
+                min="0"
+                onchange="calculateTotal()"
+            >
+        </td>
+    `;
+
+    table.appendChild(row);
+});
+
+function calculateTotal() {
+
+    let total = 0;
+
+    document.querySelectorAll("input").forEach(input => {
+        total += Number(input.value) || 0;
+    });
+
+    document.getElementById("totalBuildings").innerText = total.toLocaleString();
+}
+
+function saveData() {
+
+    const data = [];
+
+    document.querySelectorAll("tbody tr").forEach(row => {
+
+        const name = row.children[1].innerText;
+        const quantity = row.querySelector("input").value;
+
+        data.push({
+            building: name,
+            quantity: Number(quantity)
+        });
+
+    });
+
+    localStorage.setItem(
+        "simCompaniesData",
+        JSON.stringify(data)
+    );
+
+    alert("Today's data saved successfully!");
+}
+
+calculateTotal();
+
+</script>
 
 </body>
 </html>
