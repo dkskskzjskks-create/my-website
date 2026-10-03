@@ -1,118 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sim Companies Building Tracker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sim Companies Tracker</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f8;
-            color: #222;
-        }
-
-        header {
-            background: #1f2937;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 25px;
-        }
-
-        .container {
-            padding: 15px;
-            max-width: 900px;
-            margin: auto;
-        }
-
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-        }
-
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background: #e5e7eb;
-        }
-
-        input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            background: #2563eb;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        button:active {
-            background: #1d4ed8;
-        }
-
-        .total {
-            font-size: 20px;
-            font-weight: bold;
-        }
-    </style>
+<style>
+body{
+    font-family:Arial,sans-serif;
+    margin:0;
+    background:#f4f6f8;
+    color:#222;
+}
+header{
+    background:#1f2937;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:15px;
+}
+.card{
+    background:white;
+    padding:15px;
+    margin-bottom:15px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+}
+input{
+    width:100%;
+    box-sizing:border-box;
+    padding:9px;
+    border:1px solid #ccc;
+    border-radius:6px;
+}
+button{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border:0;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+}
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+th,td{
+    padding:9px;
+    border-bottom:1px solid #ddd;
+}
+th{
+    background:#e5e7eb;
+}
+h2{
+    margin-top:0;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>Sim Companies Building Tracker</h1>
+<h1>Sim Companies Building Tracker</h1>
 </header>
 
 <div class="container">
 
-    <div class="card">
-        <div class="total">
-            Total Buildings: <span id="totalBuildings">0</span>
-        </div>
-        <button onclick="saveData()">Save Today's Data</button>
-    </div>
+<div class="card">
+<h2>Today's Data</h2>
 
-    <div class="card">
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Building</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
+<label>Date</label>
+<input type="date" id="date">
 
-            <tbody id="buildingTable"></tbody>
-        </table>
-    </div>
+<button onclick="saveData()">Save Today's Data</button>
+
+<p id="message"></p>
+</div>
+
+<div class="card">
+<h2>Buildings</h2>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Building</th>
+<th>Quantity</th>
+</tr>
+</thead>
+
+<tbody id="buildingTable"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Saved History</h2>
+<div id="history"></div>
+</div>
 
 </div>
 
@@ -170,64 +160,81 @@ const buildings = [
 ["Fashion & Design",334]
 ];
 
-const table = document.getElementById("buildingTable");
+const table=document.getElementById("buildingTable");
 
-buildings.forEach((building, index) => {
+buildings.forEach((b,i)=>{
+    const row=document.createElement("tr");
 
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-        <td>${index + 1}</td>
-        <td>${building[0]}</td>
+    row.innerHTML=`
+        <td>${i+1}</td>
+        <td>${b[0]}</td>
         <td>
-            <input
-                type="number"
-                value="${building[1]}"
-                min="0"
-                onchange="calculateTotal()"
-            >
+            <input type="number" min="0" value="${b[1]}">
         </td>
     `;
 
     table.appendChild(row);
 });
 
-function calculateTotal() {
+document.getElementById("date").value=
+new Date().toISOString().split("T")[0];
 
-    let total = 0;
+function saveData(){
 
-    document.querySelectorAll("input").forEach(input => {
-        total += Number(input.value) || 0;
-    });
+    const date=document.getElementById("date").value;
 
-    document.getElementById("totalBuildings").innerText = total.toLocaleString();
-}
+    if(!date){
+        alert("Please select a date.");
+        return;
+    }
 
-function saveData() {
+    const data=[];
 
-    const data = [];
-
-    document.querySelectorAll("tbody tr").forEach(row => {
-
-        const name = row.children[1].innerText;
-        const quantity = row.querySelector("input").value;
+    document.querySelectorAll("#buildingTable tr").forEach(row=>{
 
         data.push({
-            building: name,
-            quantity: Number(quantity)
+            building:row.children[1].innerText,
+            quantity:Number(row.querySelector("input").value)||0
         });
 
     });
 
+    let history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    history[date]=data;
+
     localStorage.setItem(
-        "simCompaniesData",
-        JSON.stringify(data)
+        "simCompaniesHistory",
+        JSON.stringify(history)
     );
 
-    alert("Today's data saved successfully!");
+    document.getElementById("message").innerText=
+    "Data saved successfully for "+date+"!";
+
+    showHistory();
 }
 
-calculateTotal();
+function showHistory(){
+
+    const history=
+        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
+
+    const box=document.getElementById("history");
+
+    const dates=Object.keys(history).sort().reverse();
+
+    if(dates.length===0){
+        box.innerText="No saved data yet.";
+        return;
+    }
+
+    box.innerHTML=dates.map(date=>
+        `<p><b>${date}</b> — ${history[date].length} buildings saved</p>`
+    ).join("");
+}
+
+showHistory();
 
 </script>
 
