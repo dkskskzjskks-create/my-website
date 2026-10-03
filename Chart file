@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Building Chart</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    #chartBox {
+      width: 100%;
+      height: 700px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>Sim Companies Building Chart</h2>
+
+<div id="chartBox">
+  <canvas id="buildingChart"></canvas>
+</div>
+
+<script>
+const buildings = [
+["Power plant",35387,"12.27%"],
+["Farm",28757,"9.97%"],
+["Electronics factory",16813,"5.83%"],
+["Mine",16583,"5.75%"],
+["Grocery store",16571,"5.75%"],
+["Oil rig",15710,"5.45%"],
+["Factory",14505,"5.03%"],
+["Water reservoir",14206,"4.93%"],
+["Refinery",10441,"3.62%"],
+["Fashion store",8717,"3.02%"],
+["Electronics store",8076,"2.80%"],
+["Food processing plant",7284,"2.53%"],
+["Academy",6078,"2.11%"],
+["Ranch",5818,"2.02%"],
+["Beverage factory",5421,"1.88%"],
+["Hardware store",5131,"1.78%"],
+["Quarry",4763,"1.65%"],
+["Construction factory",4396,"1.52%"],
+["Mill",4271,"1.48%"],
+["Gas station",4150,"1.44%"],
+["Fashion factory",3510,"1.22%"],
+["Propulsion factory",3329,"1.15%"],
+["Sales offices",3198,"1.11%"],
+["Concrete plant",3179,"1.10%"],
+["Physics laboratory",3157,"1.09%"],
+["General contractor",3141,"1.09%"],
+["Shipping depot",3030,"1.05%"],
+["Car dealership",3019,"1.05%"],
+["Catering",2747,"0.95%"],
+["Slaughterhouse",2178,"0.76%"],
+["Restaurant",1972,"0.68%"],
+["Aerospace factory",1849,"0.64%"],
+["Forest nursery",1711,"0.59%"],
+["Lake",1681,"0.58%"],
+["Halloween market",1639,"0.57%"],
+["Car factory",1582,"0.55%"],
+["Bank",1551,"0.54%"],
+["Bakery",1504,"0.52%"],
+["Aerospace electronics",1471,"0.51%"],
+["Temple",1413,"0.49%"],
+["Kitchen",1379,"0.48%"],
+["Park",1354,"0.47%"],
+["Chemistry laboratory",1161,"0.40%"],
+["Plant research center",1146,"0.40%"],
+["Hangar",968,"0.34%"],
+["Software R&D",520,"0.18%"],
+["Vertical integration facility",464,"0.16%"],
+["Breeding laboratory",364,"0.13%"],
+["Fashion & Design",336,"0.12%"],
+["Automotive R&D",251,"0.09%"],
+["Xmas market",227,"0.08%"],
+["Beach market",96,"0.03%"],
+["Launch pad",86,"0.03%"],
+["Spring market",48,"0.02%"]
+];
+
+const labels = buildings.map(b => b[0]);
+const quantities = buildings.map(b => b[1]);
+const proportions = buildings.map(b => b[2]);
+
+new Chart(document.getElementById("buildingChart"), {
+  type: "bar",
+  data: {
+    labels: labels,
+    datasets: [{
+      label: "Building Quantity",
+      data: quantities
+    }]
+  },
+  options: {
+    indexAxis: "y",
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const i = context.dataIndex;
+            return "Quantity: " + quantities[i].toLocaleString() +
+                   " | Proportion: " + proportions[i];
+          }
+        }
+      }
+    },
+    scales: {
+      x: {
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: "Quantity"
+        }
+      },
+      y: {
+        ticks: {
+          autoSkip: false
+        }
+      }
+    }
+  }
+});
+</script>
+
+</body>
+</html>
