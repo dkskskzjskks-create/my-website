@@ -1,344 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sim Companies Tracker</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
-    margin:0;
-    background:#f4f6f8;
-    color:#222;
-}
-header{
-    background:#1f2937;
-    color:white;
-    padding:20px;
-    text-align:center;
-}
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:15px;
-}
-.card{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-input,select{
-    width:100%;
-    box-sizing:border-box;
-    padding:10px;
-    margin-top:6px;
-    border:1px solid #ccc;
-    border-radius:6px;
-}
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:0;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-th,td{
-    padding:9px;
-    border-bottom:1px solid #ddd;
-    text-align:left;
-}
-th{
-    background:#e5e7eb;
-}
-canvas{
-    width:100%;
-    max-height:400px;
-}
-</style>
-</head>
-
-<body>
-
-<header>
-<h1>Sim Companies Building Tracker</h1>
-</header>
-
-<div class="container">
-
-<div class="card">
-<h2>Today's Data</h2>
-
-<label>Date</label>
-<input type="date" id="date">
-
-<button onclick="saveData()">Save Today's Data</button>
-
-<p id="message"></p>
-</div>
-
-<div class="card">
-<h2>Buildings</h2>
-
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Building</th>
-<th>Quantity</th>
-</tr>
-</thead>
-
-<tbody id="buildingTable"></tbody>
-</table>
-</div>
-
-<div class="card">
-<h2>History Chart</h2>
-
-<label>Select Building</label>
-<select id="buildingSelect" onchange="drawChart()"></select>
-
-<canvas id="chart"></canvas>
-</div>
-
-<div class="card">
-<h2>Saved History</h2>
-<div id="history"></div>
-</div>
-
-</div>
-
-<script>
-
 const buildings = [
-["Power plant",35331],
-["Farm",28744],
-["Electronics factory",16767],
-["Mine",16594],
-["Grocery store",16578],
-["Oil rig",15687],
-["Factory",14497],
-["Water reservoir",14194],
-["Refinery",10452],
-["Fashion store",8713],
-["Electronics store",8057],
-["Food processing plant",7278],
-["Academy",6056],
-["Ranch",5822],
-["Beverage factory",5424],
-["Hardware store",5125],
-["Quarry",4727],
-["Construction factory",4397],
-["Mill",4279],
-["Gas station",4135],
-["Fashion factory",3510],
-["Propulsion factory",3313],
-["Sales offices",3188],
-["Concrete plant",3185],
-["Physics laboratory",3155],
-["General contractor",3137],
-["Shipping depot",3027],
-["Car dealership",3021],
-["Catering",2733],
-["Slaughterhouse",2178],
-["Restaurant",1955],
-["Aerospace factory",1852],
-["Forest nursery",1700],
-["Lake",1678],
-["Halloween market",1641],
-["Car factory",1591],
-["Bank",1550],
-["Bakery",1500],
-["Aerospace electronics",1466],
-["Temple",1414],
-["Kitchen",1373],
-["Park",1352],
-["Chemistry laboratory",1159],
-["Plant research center",1142],
-["Hangar",966],
-["Software R&D",522],
-["Vertical integration facility",463],
-["Breeding laboratory",365],
-["Fashion & Design",334]
+["Power plant",35387,"12.27%"],
+["Farm",28757,"9.97%"],
+["Electronics factory",16813,"5.83%"],
+["Mine",16583,"5.75%"],
+["Grocery store",16571,"5.75%"],
+["Oil rig",15710,"5.45%"],
+["Factory",14505,"5.03%"],
+["Water reservoir",14206,"4.93%"],
+["Refinery",10441,"3.62%"],
+["Fashion store",8717,"3.02%"],
+["Electronics store",8076,"2.80%"],
+["Food processing plant",7284,"2.53%"],
+["Academy",6078,"2.11%"],
+["Ranch",5818,"2.02%"],
+["Beverage factory",5421,"1.88%"],
+["Hardware store",5131,"1.78%"],
+["Quarry",4763,"1.65%"],
+["Construction factory",4396,"1.52%"],
+["Mill",4271,"1.48%"],
+["Gas station",4150,"1.44%"],
+["Fashion factory",3510,"1.22%"],
+["Propulsion factory",3329,"1.15%"],
+["Sales offices",3198,"1.11%"],
+["Concrete plant",3179,"1.10%"],
+["Physics laboratory",3157,"1.09%"],
+["General contractor",3141,"1.09%"],
+["Shipping depot",3030,"1.05%"],
+["Car dealership",3019,"1.05%"],
+["Catering",2747,"0.95%"],
+["Slaughterhouse",2178,"0.76%"],
+["Restaurant",1972,"0.68%"],
+["Aerospace factory",1849,"0.64%"],
+["Forest nursery",1711,"0.59%"],
+["Lake",1681,"0.58%"],
+["Halloween market",1639,"0.57%"],
+["Car factory",1582,"0.55%"],
+["Bank",1551,"0.54%"],
+["Bakery",1504,"0.52%"],
+["Aerospace electronics",1471,"0.51%"],
+["Temple",1413,"0.49%"],
+["Kitchen",1379,"0.48%"],
+["Park",1354,"0.47%"],
+["Chemistry laboratory",1161,"0.40%"],
+["Plant research center",1146,"0.40%"],
+["Hangar",968,"0.34%"],
+["Software R&D",520,"0.18%"],
+["Vertical integration facility",464,"0.16%"],
+["Breeding laboratory",364,"0.13%"],
+["Fashion & Design",336,"0.12%"],
+["Automotive R&D",251,"0.09%"],
+["Xmas market",227,"0.08%"],
+["Beach market",96,"0.03%"],
+["Launch pad",86,"0.03%"],
+["Spring market",48,"0.02%"]
 ];
-
-const table=document.getElementById("buildingTable");
-const select=document.getElementById("buildingSelect");
-
-buildings.forEach((b,i)=>{
-
-    const row=document.createElement("tr");
-
-    row.innerHTML=`
-        <td>${i+1}</td>
-        <td>${b[0]}</td>
-        <td>
-            <input type="number" min="0" value="${b[1]}">
-        </td>
-    `;
-
-    table.appendChild(row);
-
-    const option=document.createElement("option");
-    option.value=i;
-    option.textContent=b[0];
-
-    select.appendChild(option);
-});
-
-document.getElementById("date").value=
-new Date().toISOString().split("T")[0];
-
-function saveData(){
-
-    const date=document.getElementById("date").value;
-
-    if(!date){
-        alert("Please select a date.");
-        return;
-    }
-
-    const data=[];
-
-    document.querySelectorAll("#buildingTable tr").forEach(row=>{
-
-        data.push({
-            building:row.children[1].innerText,
-            quantity:Number(row.querySelector("input").value)||0
-        });
-
-    });
-
-    let history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    history[date]=data;
-
-    localStorage.setItem(
-        "simCompaniesHistory",
-        JSON.stringify(history)
-    );
-
-    document.getElementById("message").innerText=
-    "Data saved successfully for "+date+"!";
-
-    showHistory();
-    drawChart();
-}
-
-function showHistory(){
-
-    const history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    const box=document.getElementById("history");
-
-    const dates=Object.keys(history).sort().reverse();
-
-    if(dates.length===0){
-        box.innerText="No saved data yet.";
-        return;
-    }
-
-    box.innerHTML=dates.map(date=>
-        `<p><b>${date}</b> — ${history[date].length} buildings saved</p>`
-    ).join("");
-}
-
-function drawChart(){
-
-    const canvas=document.getElementById("chart");
-    const ctx=canvas.getContext("2d");
-
-    const history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    const dates=Object.keys(history).sort();
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    if(dates.length===0){
-        ctx.font="16px Arial";
-        ctx.fillText("Save data for at least one date.",20,40);
-        return;
-    }
-
-    const index=Number(select.value);
-
-    const values=dates.map(date=>{
-        return history[date][index]
-        ? history[date][index].quantity
-        : 0;
-    });
-
-    const width=canvas.width=canvas.clientWidth*2;
-    const height=canvas.height=350;
-
-    ctx.scale(2,2);
-
-    const w=canvas.clientWidth;
-    const h=175;
-
-    const max=Math.max(...values);
-    const min=Math.min(...values);
-
-    ctx.beginPath();
-
-    values.forEach((value,i)=>{
-
-        const x=30+
-        (i/(Math.max(values.length-1,1)))*(w-50);
-
-        const y=20+
-        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
-
-        if(i===0){
-            ctx.moveTo(x,y);
-        }else{
-            ctx.lineTo(x,y);
-        }
-    });
-
-    ctx.stroke();
-
-    ctx.font="12px Arial";
-
-    values.forEach((value,i)=>{
-
-        const x=30+
-        (i/(Math.max(values.length-1,1)))*(w-50);
-
-        const y=20+
-        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
-
-        ctx.fillText(
-            value.toLocaleString(),
-            Math.max(5,x-15),
-            Math.max(12,y-8)
-        );
-
-        ctx.fillText(
-            dates[i],
-            Math.max(5,x-25),
-            h-5
-        );
-    });
-}
-
-showHistory();
-drawChart();
-
-</script>
-
-</body>
-</html>
