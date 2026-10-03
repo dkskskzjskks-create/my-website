@@ -1,56 +1,112 @@
-const buildings = [
-["Power plant",35387,"12.27%"],
-["Farm",28757,"9.97%"],
-["Electronics factory",16813,"5.83%"],
-["Mine",16583,"5.75%"],
-["Grocery store",16571,"5.75%"],
-["Oil rig",15710,"5.45%"],
-["Factory",14505,"5.03%"],
-["Water reservoir",14206,"4.93%"],
-["Refinery",10441,"3.62%"],
-["Fashion store",8717,"3.02%"],
-["Electronics store",8076,"2.80%"],
-["Food processing plant",7284,"2.53%"],
-["Academy",6078,"2.11%"],
-["Ranch",5818,"2.02%"],
-["Beverage factory",5421,"1.88%"],
-["Hardware store",5131,"1.78%"],
-["Quarry",4763,"1.65%"],
-["Construction factory",4396,"1.52%"],
-["Mill",4271,"1.48%"],
-["Gas station",4150,"1.44%"],
-["Fashion factory",3510,"1.22%"],
-["Propulsion factory",3329,"1.15%"],
-["Sales offices",3198,"1.11%"],
-["Concrete plant",3179,"1.10%"],
-["Physics laboratory",3157,"1.09%"],
-["General contractor",3141,"1.09%"],
-["Shipping depot",3030,"1.05%"],
-["Car dealership",3019,"1.05%"],
-["Catering",2747,"0.95%"],
-["Slaughterhouse",2178,"0.76%"],
-["Restaurant",1972,"0.68%"],
-["Aerospace factory",1849,"0.64%"],
-["Forest nursery",1711,"0.59%"],
-["Lake",1681,"0.58%"],
-["Halloween market",1639,"0.57%"],
-["Car factory",1582,"0.55%"],
-["Bank",1551,"0.54%"],
-["Bakery",1504,"0.52%"],
-["Aerospace electronics",1471,"0.51%"],
-["Temple",1413,"0.49%"],
-["Kitchen",1379,"0.48%"],
-["Park",1354,"0.47%"],
-["Chemistry laboratory",1161,"0.40%"],
-["Plant research center",1146,"0.40%"],
-["Hangar",968,"0.34%"],
-["Software R&D",520,"0.18%"],
-["Vertical integration facility",464,"0.16%"],
-["Breeding laboratory",364,"0.13%"],
-["Fashion & Design",336,"0.12%"],
-["Automotive R&D",251,"0.09%"],
-["Xmas market",227,"0.08%"],
-["Beach market",96,"0.03%"],
-["Launch pad",86,"0.03%"],
-["Spring market",48,"0.02%"]
-];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sim Companies Building Data</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+th {
+    background: #222;
+    color: white;
+}
+tr:nth-child(even) {
+    background: #f2f2f2;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Sim Companies Building Data</h1>
+
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Building</th>
+<th>Quantity</th>
+<th>Proportion</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr><td>1</td><td>Power plant</td><td>35,387</td><td>12.27%</td></tr>
+<tr><td>2</td><td>Farm</td><td>28,757</td><td>9.97%</td></tr>
+<tr><td>3</td><td>Electronics factory</td><td>16,813</td><td>5.83%</td></tr>
+<tr><td>4</td><td>Mine</td><td>16,583</td><td>5.75%</td></tr>
+<tr><td>5</td><td>Grocery store</td><td>16,571</td><td>5.75%</td></tr>
+<tr><td>6</td><td>Oil rig</td><td>15,710</td><td>5.45%</td></tr>
+<tr><td>7</td><td>Factory</td><td>14,505</td><td>5.03%</td></tr>
+<tr><td>8</td><td>Water reservoir</td><td>14,206</td><td>4.93%</td></tr>
+<tr><td>9</td><td>Refinery</td><td>10,441</td><td>3.62%</td></tr>
+<tr><td>10</td><td>Fashion store</td><td>8,717</td><td>3.02%</td></tr>
+<tr><td>11</td><td>Electronics store</td><td>8,076</td><td>2.80%</td></tr>
+<tr><td>12</td><td>Food processing plant</td><td>7,284</td><td>2.53%</td></tr>
+<tr><td>13</td><td>Academy</td><td>6,078</td><td>2.11%</td></tr>
+<tr><td>14</td><td>Ranch</td><td>5,818</td><td>2.02%</td></tr>
+<tr><td>15</td><td>Beverage factory</td><td>5,421</td><td>1.88%</td></tr>
+<tr><td>16</td><td>Hardware store</td><td>5,131</td><td>1.78%</td></tr>
+<tr><td>17</td><td>Quarry</td><td>4,763</td><td>1.65%</td></tr>
+<tr><td>18</td><td>Construction factory</td><td>4,396</td><td>1.52%</td></tr>
+<tr><td>19</td><td>Mill</td><td>4,271</td><td>1.48%</td></tr>
+<tr><td>20</td><td>Gas station</td><td>4,150</td><td>1.44%</td></tr>
+<tr><td>21</td><td>Fashion factory</td><td>3,510</td><td>1.22%</td></tr>
+<tr><td>22</td><td>Propulsion factory</td><td>3,329</td><td>1.15%</td></tr>
+<tr><td>23</td><td>Sales offices</td><td>3,198</td><td>1.11%</td></tr>
+<tr><td>24</td><td>Concrete plant</td><td>3,179</td><td>1.10%</td></tr>
+<tr><td>25</td><td>Physics laboratory</td><td>3,157</td><td>1.09%</td></tr>
+<tr><td>26</td><td>General contractor</td><td>3,141</td><td>1.09%</td></tr>
+<tr><td>27</td><td>Shipping depot</td><td>3,030</td><td>1.05%</td></tr>
+<tr><td>28</td><td>Car dealership</td><td>3,019</td><td>1.05%</td></tr>
+<tr><td>29</td><td>Catering</td><td>2,747</td><td>0.95%</td></tr>
+<tr><td>30</td><td>Slaughterhouse</td><td>2,178</td><td>0.76%</td></tr>
+<tr><td>31</td><td>Restaurant</td><td>1,972</td><td>0.68%</td></tr>
+<tr><td>32</td><td>Aerospace factory</td><td>1,849</td><td>0.64%</td></tr>
+<tr><td>33</td><td>Forest nursery</td><td>1,711</td><td>0.59%</td></tr>
+<tr><td>34</td><td>Lake</td><td>1,681</td><td>0.58%</td></tr>
+<tr><td>35</td><td>Halloween market</td><td>1,639</td><td>0.57%</td></tr>
+<tr><td>36</td><td>Car factory</td><td>1,582</td><td>0.55%</td></tr>
+<tr><td>37</td><td>Bank</td><td>1,551</td><td>0.54%</td></tr>
+<tr><td>38</td><td>Bakery</td><td>1,504</td><td>0.52%</td></tr>
+<tr><td>39</td><td>Aerospace electronics</td><td>1,471</td><td>0.51%</td></tr>
+<tr><td>40</td><td>Temple</td><td>1,413</td><td>0.49%</td></tr>
+<tr><td>41</td><td>Kitchen</td><td>1,379</td><td>0.48%</td></tr>
+<tr><td>42</td><td>Park</td><td>1,354</td><td>0.47%</td></tr>
+<tr><td>43</td><td>Chemistry laboratory</td><td>1,161</td><td>0.40%</td></tr>
+<tr><td>44</td><td>Plant research center</td><td>1,146</td><td>0.40%</td></tr>
+<tr><td>45</td><td>Hangar</td><td>968</td><td>0.34%</td></tr>
+<tr><td>46</td><td>Software R&amp;D</td><td>520</td><td>0.18%</td></tr>
+<tr><td>47</td><td>Vertical integration facility</td><td>464</td><td>0.16%</td></tr>
+<tr><td>48</td><td>Breeding laboratory</td><td>364</td><td>0.13%</td></tr>
+<tr><td>49</td><td>Fashion &amp; Design</td><td>336</td><td>0.12%</td></tr>
+<tr><td>50</td><td>Automotive R&amp;D</td><td>251</td><td>0.09%</td></tr>
+<tr><td>51</td><td>Xmas market</td><td>227</td><td>0.08%</td></tr>
+<tr><td>52</td><td>Beach market</td><td>96</td><td>0.03%</td></tr>
+<tr><td>53</td><td>Launch pad</td><td>86</td><td>0.03%</td></tr>
+<tr><td>54</td><td>Spring market</td><td>48</td><td>0.02%</td></tr>
+
+</tbody>
+</table>
+
+</body>
+</html>
