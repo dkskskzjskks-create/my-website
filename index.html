@@ -1,344 +1,671 @@
 <!DOCTYPE html>
-<html>
+<html lang="hi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sim Companies Tracker</title>
-
-<style>
-body{
-    font-family:Arial,sans-serif;
-    margin:0;
-    background:#f4f6f8;
-    color:#222;
-}
-header{
-    background:#1f2937;
-    color:white;
-    padding:20px;
-    text-align:center;
-}
-.container{
-    max-width:900px;
-    margin:auto;
-    padding:15px;
-}
-.card{
-    background:white;
-    padding:15px;
-    margin-bottom:15px;
-    border-radius:12px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-}
-input,select{
-    width:100%;
-    box-sizing:border-box;
-    padding:10px;
-    margin-top:6px;
-    border:1px solid #ccc;
-    border-radius:6px;
-}
-button{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border:0;
-    border-radius:8px;
-    background:#2563eb;
-    color:white;
-    font-size:16px;
-}
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-th,td{
-    padding:9px;
-    border-bottom:1px solid #ddd;
-    text-align:left;
-}
-th{
-    background:#e5e7eb;
-}
-canvas{
-    width:100%;
-    max-height:400px;
-}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Sims Company - Building Tracker</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --border: #334155;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 16px;
+      line-height: 1.5;
+    }
+    .container { max-width: 900px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    header h1 {
+      font-size: 1.6rem;
+      background: linear-gradient(90deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    header p { color: var(--muted); font-size: 0.95rem; }
+    .date-badge {
+      display: inline-block;
+      background: rgba(59,130,246,0.2);
+      color: #93c5fd;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      margin-top: 8px;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(59,130,246,0.08); }
+    .qty { font-weight: 600; color: #60a5fa; }
+    .prop { color: #a78bfa; }
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 20px;
+      font-size: 0.95rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-success:hover { background: #16a34a; }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.05); color: var(--text); }
+    .admin-btn-wrap {
+      text-align: center;
+      margin: 20px 0;
+    }
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.show { display: flex; }
+    .modal {
+      background: var(--card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    .modal h3 { margin-bottom: 16px; font-size: 1.2rem; }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1rem;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+    }
+    .building-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      align-items: center;
+    }
+    .building-row input { flex: 1; }
+    .building-row input:first-child { flex: 2; }
+    .building-row .remove-btn {
+      background: transparent;
+      border: none;
+      color: var(--danger);
+      font-size: 1.3rem;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .modal-actions .btn { flex: 1; min-width: 120px; }
+    /* Chart section */
+    .chart-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 16px;
+      align-items: center;
+    }
+    .chart-controls select {
+      max-width: 280px;
+      flex: 1;
+    }
+    .chart-wrap {
+      position: relative;
+      height: 320px;
+      width: 100%;
+    }
+    .info-text {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 12px;
+      text-align: center;
+    }
+    .password-error {
+      color: var(--danger);
+      font-size: 0.85rem;
+      margin-top: 8px;
+      display: none;
+    }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-top: 30px;
+      padding-bottom: 20px;
+    }
+    /* Swipe indicator for mobile */
+    .swipe-hint {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.8rem;
+      margin-bottom: 8px;
+      display: none;
+    }
+    @media (max-width: 600px) {
+      .swipe-hint { display: block; }
+      header h1 { font-size: 1.35rem; }
+      th, td { padding: 10px 6px; font-size: 0.9rem; }
+      .chart-wrap { height: 260px; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="container">
+    <header>
+      <h1>🏗️ Sims Company Building Tracker</h1>
+      <p>Daily building quantity &amp; proportion</p>
+      <div class="date-badge" id="latestDate">No data yet</div>
+    </header>
 
-<header>
-<h1>Sim Companies Building Tracker</h1>
-</header>
+    <!-- Current Day Table -->
+    <div class="card">
+      <h2>📋 Aaj ki Buildings</h2>
+      <div id="tableContainer">
+        <div class="empty">Abhi koi data nahi hai.<br>Neeche Admin button se pehla data add karein.</div>
+      </div>
+    </div>
 
-<div class="container">
+    <!-- Admin Button -->
+    <div class="admin-btn-wrap">
+      <button class="btn btn-primary" id="adminBtn">🔐 Admin / Update Data</button>
+    </div>
 
-<div class="card">
-<h2>Today's Data</h2>
+    <!-- Historical Chart Section -->
+    <div class="card">
+      <h2>📈 Historical Chart (Last 5 Years)</h2>
+      <p class="swipe-hint">← Swipe / Select building →</p>
+      <div class="chart-controls">
+        <select id="buildingSelect">
+          <option value="">-- Building select karein --</option>
+        </select>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="historyChart"></canvas>
+      </div>
+      <p class="info-text">Chart selected building ki quantity ko time ke saath dikhata hai (max 5 saal).</p>
+    </div>
 
-<label>Date</label>
-<input type="date" id="date">
+    <footer>
+      Data browser me save hota hai (localStorage). Same device/browser use karein.
+    </footer>
+  </div>
 
-<button onclick="saveData()">Save Today's Data</button>
+  <!-- Password Modal -->
+  <div class="modal-overlay" id="passwordModal">
+    <div class="modal">
+      <h3>🔐 Password Enter Karein</h3>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="passwordInput" placeholder="Password" autocomplete="off" />
+        <div class="password-error" id="passwordError">Galat password!</div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelPassword">Cancel</button>
+        <button class="btn btn-primary" id="submitPassword">Open</button>
+      </div>
+    </div>
+  </div>
 
-<p id="message"></p>
-</div>
+  <!-- Admin / Update Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal">
+      <h3>➕ Naya Data Add / Update</h3>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="dataDate" />
+      </div>
+      <div class="form-group">
+        <label>Buildings (Name + Quantity)</label>
+        <div id="buildingsList"></div>
+        <button type="button" class="btn btn-ghost" id="addBuildingRow" style="margin-top:8px;width:100%;">+ Building Add</button>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" id="cancelAdmin">Cancel</button>
+        <button class="btn btn-success" id="saveData">💾 Update Website</button>
+      </div>
+    </div>
+  </div>
 
-<div class="card">
-<h2>Buildings</h2>
+  <script>
+    const PASSWORD = "124421124";
+    const STORAGE_KEY = "sims_company_buildings_data";
+    const FIVE_YEARS_MS = 5 * 365.25 * 24 * 60 * 60 * 1000;
 
-<table>
-<thead>
-<tr>
-<th>#</th>
-<th>Building</th>
-<th>Quantity</th>
-</tr>
-</thead>
+    let chartInstance = null;
 
-<tbody id="buildingTable"></tbody>
-</table>
-</div>
-
-<div class="card">
-<h2>History Chart</h2>
-
-<label>Select Building</label>
-<select id="buildingSelect" onchange="drawChart()"></select>
-
-<canvas id="chart"></canvas>
-</div>
-
-<div class="card">
-<h2>Saved History</h2>
-<div id="history"></div>
-</div>
-
-</div>
-
-<script>
-
-const buildings = [
-["Power plant",35331],
-["Farm",28744],
-["Electronics factory",16767],
-["Mine",16594],
-["Grocery store",16578],
-["Oil rig",15687],
-["Factory",14497],
-["Water reservoir",14194],
-["Refinery",10452],
-["Fashion store",8713],
-["Electronics store",8057],
-["Food processing plant",7278],
-["Academy",6056],
-["Ranch",5822],
-["Beverage factory",5424],
-["Hardware store",5125],
-["Quarry",4727],
-["Construction factory",4397],
-["Mill",4279],
-["Gas station",4135],
-["Fashion factory",3510],
-["Propulsion factory",3313],
-["Sales offices",3188],
-["Concrete plant",3185],
-["Physics laboratory",3155],
-["General contractor",3137],
-["Shipping depot",3027],
-["Car dealership",3021],
-["Catering",2733],
-["Slaughterhouse",2178],
-["Restaurant",1955],
-["Aerospace factory",1852],
-["Forest nursery",1700],
-["Lake",1678],
-["Halloween market",1641],
-["Car factory",1591],
-["Bank",1550],
-["Bakery",1500],
-["Aerospace electronics",1466],
-["Temple",1414],
-["Kitchen",1373],
-["Park",1352],
-["Chemistry laboratory",1159],
-["Plant research center",1142],
-["Hangar",966],
-["Software R&D",522],
-["Vertical integration facility",463],
-["Breeding laboratory",365],
-["Fashion & Design",334]
-];
-
-const table=document.getElementById("buildingTable");
-const select=document.getElementById("buildingSelect");
-
-buildings.forEach((b,i)=>{
-
-    const row=document.createElement("tr");
-
-    row.innerHTML=`
-        <td>${i+1}</td>
-        <td>${b[0]}</td>
-        <td>
-            <input type="number" min="0" value="${b[1]}">
-        </td>
-    `;
-
-    table.appendChild(row);
-
-    const option=document.createElement("option");
-    option.value=i;
-    option.textContent=b[0];
-
-    select.appendChild(option);
-});
-
-document.getElementById("date").value=
-new Date().toISOString().split("T")[0];
-
-function saveData(){
-
-    const date=document.getElementById("date").value;
-
-    if(!date){
-        alert("Please select a date.");
-        return;
+    // ---------- Storage helpers ----------
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
     }
 
-    const data=[];
+    function saveData(data) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
 
-    document.querySelectorAll("#buildingTable tr").forEach(row=>{
+    // ---------- Render current day table ----------
+    function getLatestEntry(data) {
+      if (!data.length) return null;
+      return data.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+    }
 
-        data.push({
-            building:row.children[1].innerText,
-            quantity:Number(row.querySelector("input").value)||0
+    function renderTable() {
+      const data = loadData();
+      const latest = getLatestEntry(data);
+      const container = document.getElementById("tableContainer");
+      const dateBadge = document.getElementById("latestDate");
+
+      if (!latest || !latest.buildings.length) {
+        container.innerHTML = '<div class="empty">Abhi koi data nahi hai.<br>Neeche Admin button se pehla data add karein.</div>';
+        dateBadge.textContent = "No data yet";
+        return;
+      }
+
+      dateBadge.textContent = "Latest: " + formatDate(latest.date);
+
+      const total = latest.buildings.reduce((s, b) => s + (Number(b.qty) || 0), 0);
+
+      let html = `
+        <table>
+          <thead>
+            <tr>
+              <th>Building Name</th>
+              <th>Quantity</th>
+              <th>Proportion</th>
+            </tr>
+          </thead>
+          <tbody>
+      `;
+
+      latest.buildings
+        .slice()
+        .sort((a, b) => (Number(b.qty) || 0) - (Number(a.qty) || 0))
+        .forEach(b => {
+          const qty = Number(b.qty) || 0;
+          const prop = total > 0 ? ((qty / total) * 100).toFixed(1) + "%" : "0%";
+          html += `
+            <tr>
+              <td>${escapeHtml(b.name)}</td>
+              <td class="qty">${qty.toLocaleString()}</td>
+              <td class="prop">${prop}</td>
+            </tr>
+          `;
         });
 
-    });
-
-    let history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    history[date]=data;
-
-    localStorage.setItem(
-        "simCompaniesHistory",
-        JSON.stringify(history)
-    );
-
-    document.getElementById("message").innerText=
-    "Data saved successfully for "+date+"!";
-
-    showHistory();
-    drawChart();
-}
-
-function showHistory(){
-
-    const history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    const box=document.getElementById("history");
-
-    const dates=Object.keys(history).sort().reverse();
-
-    if(dates.length===0){
-        box.innerText="No saved data yet.";
-        return;
+      html += `
+          </tbody>
+        </table>
+        <p class="info-text" style="margin-top:12px;">Total Quantity: <strong>${total.toLocaleString()}</strong></p>
+      `;
+      container.innerHTML = html;
     }
 
-    box.innerHTML=dates.map(date=>
-        `<p><b>${date}</b> — ${history[date].length} buildings saved</p>`
-    ).join("");
-}
-
-function drawChart(){
-
-    const canvas=document.getElementById("chart");
-    const ctx=canvas.getContext("2d");
-
-    const history=
-        JSON.parse(localStorage.getItem("simCompaniesHistory")||"{}");
-
-    const dates=Object.keys(history).sort();
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    if(dates.length===0){
-        ctx.font="16px Arial";
-        ctx.fillText("Save data for at least one date.",20,40);
-        return;
+    function formatDate(iso) {
+      if (!iso) return "";
+      const [y, m, d] = iso.split("-");
+      return `${d}/${m}/${y}`;
     }
 
-    const index=Number(select.value);
+    function escapeHtml(str) {
+      const div = document.createElement("div");
+      div.textContent = str;
+      return div.innerHTML;
+    }
 
-    const values=dates.map(date=>{
-        return history[date][index]
-        ? history[date][index].quantity
-        : 0;
-    });
+    // ---------- Building select + Chart ----------
+    function getAllBuildings(data) {
+      const set = new Set();
+      data.forEach(day => {
+        (day.buildings || []).forEach(b => {
+          if (b.name && b.name.trim()) set.add(b.name.trim());
+        });
+      });
+      return Array.from(set).sort((a, b) => a.localeCompare(b));
+    }
 
-    const width=canvas.width=canvas.clientWidth*2;
-    const height=canvas.height=350;
+    function populateBuildingSelect() {
+      const data = loadData();
+      const buildings = getAllBuildings(data);
+      const select = document.getElementById("buildingSelect");
+      const current = select.value;
+      select.innerHTML = '<option value="">-- Building select karein --</option>';
+      buildings.forEach(name => {
+        const opt = document.createElement("option");
+        opt.value = name;
+        opt.textContent = name;
+        select.appendChild(opt);
+      });
+      if (current && buildings.includes(current)) {
+        select.value = current;
+      }
+    }
 
-    ctx.scale(2,2);
+    function renderChart(buildingName) {
+      const canvas = document.getElementById("historyChart");
+      if (chartInstance) {
+        chartInstance.destroy();
+        chartInstance = null;
+      }
 
-    const w=canvas.clientWidth;
-    const h=175;
+      if (!buildingName) {
+        // empty chart
+        chartInstance = new Chart(canvas, {
+          type: "line",
+          data: { labels: [], datasets: [] },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(51,65,85,0.5)" } },
+              y: { ticks: { color: "#94a3b8" }, grid: { color: "rgba(51,65,85,0.5)" }, beginAtZero: true }
+            }
+          }
+        });
+        return;
+      }
 
-    const max=Math.max(...values);
-    const min=Math.min(...values);
+      const data = loadData();
+      const now = Date.now();
+      const cutoff = now - FIVE_YEARS_MS;
 
-    ctx.beginPath();
-
-    values.forEach((value,i)=>{
-
-        const x=30+
-        (i/(Math.max(values.length-1,1)))*(w-50);
-
-        const y=20+
-        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
-
-        if(i===0){
-            ctx.moveTo(x,y);
-        }else{
-            ctx.lineTo(x,y);
+      const points = [];
+      data.forEach(day => {
+        const ts = new Date(day.date + "T00:00:00").getTime();
+        if (ts < cutoff) return;
+        const b = (day.buildings || []).find(x => x.name.trim() === buildingName);
+        if (b) {
+          points.push({ date: day.date, qty: Number(b.qty) || 0 });
         }
+      });
+
+      points.sort((a, b) => a.date.localeCompare(b.date));
+
+      const labels = points.map(p => formatDate(p.date));
+      const values = points.map(p => p.qty);
+
+      chartInstance = new Chart(canvas, {
+        type: "line",
+        data: {
+          labels,
+          datasets: [{
+            label: buildingName + " Quantity",
+            data: values,
+            borderColor: "#3b82f6",
+            backgroundColor: "rgba(59,130,246,0.15)",
+            fill: true,
+            tension: 0.3,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: { color: "#f1f5f9" }
+            },
+            tooltip: {
+              callbacks: {
+                label: ctx => ` Quantity: ${ctx.parsed.y.toLocaleString()}`
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: "#94a3b8", maxRotation: 45, minRotation: 0 },
+              grid: { color: "rgba(51,65,85,0.5)" }
+            },
+            y: {
+              ticks: { color: "#94a3b8" },
+              grid: { color: "rgba(51,65,85,0.5)" },
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    // ---------- Admin form helpers ----------
+    function createBuildingRow(name = "", qty = "") {
+      const row = document.createElement("div");
+      row.className = "building-row";
+      row.innerHTML = `
+        <input type="text" placeholder="Building Name" value="${escapeHtml(name)}" class="b-name" />
+        <input type="number" placeholder="Qty" value="${qty}" min="0" class="b-qty" />
+        <button type="button" class="remove-btn" title="Remove">×</button>
+      `;
+      row.querySelector(".remove-btn").addEventListener("click", () => row.remove());
+      return row;
+    }
+
+    function openAdminModal() {
+      const list = document.getElementById("buildingsList");
+      list.innerHTML = "";
+      // Pre-fill with latest if exists
+      const data = loadData();
+      const latest = getLatestEntry(data);
+      if (latest && latest.buildings.length) {
+        latest.buildings.forEach(b => {
+          list.appendChild(createBuildingRow(b.name, b.qty));
+        });
+      } else {
+        list.appendChild(createBuildingRow());
+      }
+
+      // Set date to today
+      const today = new Date();
+      const iso = today.toISOString().slice(0, 10);
+      document.getElementById("dataDate").value = iso;
+
+      document.getElementById("adminModal").classList.add("show");
+    }
+
+    // ---------- Event listeners ----------
+    document.getElementById("adminBtn").addEventListener("click", () => {
+      document.getElementById("passwordInput").value = "";
+      document.getElementById("passwordError").style.display = "none";
+      document.getElementById("passwordModal").classList.add("show");
+      setTimeout(() => document.getElementById("passwordInput").focus(), 100);
     });
 
-    ctx.stroke();
-
-    ctx.font="12px Arial";
-
-    values.forEach((value,i)=>{
-
-        const x=30+
-        (i/(Math.max(values.length-1,1)))*(w-50);
-
-        const y=20+
-        (1-(value-min)/(Math.max(max-min,1)))*(h-50);
-
-        ctx.fillText(
-            value.toLocaleString(),
-            Math.max(5,x-15),
-            Math.max(12,y-8)
-        );
-
-        ctx.fillText(
-            dates[i],
-            Math.max(5,x-25),
-            h-5
-        );
+    document.getElementById("cancelPassword").addEventListener("click", () => {
+      document.getElementById("passwordModal").classList.remove("show");
     });
-}
 
-showHistory();
-drawChart();
+    document.getElementById("submitPassword").addEventListener("click", () => {
+      const entered = document.getElementById("passwordInput").value;
+      if (entered === PASSWORD) {
+        document.getElementById("passwordModal").classList.remove("show");
+        openAdminModal();
+      } else {
+        document.getElementById("passwordError").style.display = "block";
+      }
+    });
 
-</script>
+    document.getElementById("passwordInput").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") document.getElementById("submitPassword").click();
+    });
 
-</body>
-</html>
+    document.getElementById("cancelAdmin").addEventListener("click", () => {
+      document.getElementById("adminModal").classList.remove("show");
+    });
+
+    document.getElementById("addBuildingRow").addEventListener("click", () => {
+      document.getElementById("buildingsList").appendChild(createBuildingRow());
+    });
+
+    document.getElementById("saveData").addEventListener("click", () => {
+      const date = document.getElementById("dataDate").value;
+      if (!date) {
+        alert("Date select karein!");
+        return;
+      }
+
+      const rows = document.querySelectorAll("#buildingsList .building-row");
+      const buildings = [];
+      rows.forEach(row => {
+        const name = row.querySelector(".b-name").value.trim();
+        const qty = parseInt(row.querySelector(".b-qty").value, 10);
+        if (name && !isNaN(qty) && qty >= 0) {
+          buildings.push({ name, qty });
+        }
+      });
+
+      if (!buildings.length) {
+        alert("Kam se kam ek building add karein!");
+        return;
+      }
+
+      let data = loadData();
+      // Replace if same date already exists
+      const idx = data.findIndex(d => d.date === date);
+      if (idx >= 0) {
+        data[idx] = { date, buildings };
+      } else {
+        data.push({ date, buildings });
+      }
+
+      // Keep only last 5 years roughly
+      const cutoff = Date.now() - FIVE_YEARS_MS;
+      data = data.filter(d => new Date(d.date + "T00:00:00").getTime() >= cutoff);
+
+      saveData(data);
+      document.getElementById("adminModal").classList.remove("show");
+
+      // Refresh UI
+      renderTable();
+      populateBuildingSelect();
+      const sel = document.getElementById("buildingSelect");
+      if (sel.value) renderChart(sel.value);
+      else if (buildings.length) {
+        sel.value = buildings[0].name;
+        renderChart(buildings[0].name);
+      }
+
+      alert("✅ Website update ho gayi!");
+    });
+
+    document.getElementById("buildingSelect").addEventListener("change", (e) => {
+      renderChart(e.target.value);
+    });
+
+    // Close modals on overlay click
+    document.querySelectorAll(".modal-overlay").forEach(overlay => {
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) overlay.classList.remove("show");
+      });
+    });
+
+    // ---------- Init ----------
+    rende
